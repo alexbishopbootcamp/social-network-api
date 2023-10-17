@@ -6,7 +6,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', routes);
+app.use('/api', routes);
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
