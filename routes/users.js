@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 // GET all users
 router.get('/', (req, res) => {
@@ -79,12 +79,19 @@ router.delete('/:id', (req, res) => {
         return;
       }
       // Remove all thoughts associated with this user
-      return Thought.deleteMany({ username: dbUserData.username });
+      Thought.deleteMany({ username: dbUserData.username })
+        .then(() => {
+          res.json({ message: "User and associated thoughts deleted!" });
+        })
+        .catch(err => {
+          console.log("Error deleting thoughts: ", err);
+          res.status(400).json(err);
+        });
     })
-    .then(() => {
-      res.json({ message: "User and associated thoughts deleted!" });
-    })
-    .catch(err => res.status(400).json(err));
+    .catch(err => {
+      console.log("Error deleting user: ", err);
+      res.status(400).json(err);
+    });
 });
 
 

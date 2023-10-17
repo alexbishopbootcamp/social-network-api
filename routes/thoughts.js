@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Thought } = require('../models');
+const { User, Thought } = require('../models');
 
 // GET all thoughts
 router.get('/', (req, res) => {
@@ -42,21 +42,24 @@ router.post('/', (req, res) => {
   };
   Thought.create(newThought)
     .then(dbThoughtData => {
-      // Add thought to user's thoughts array
-      return User.findOneAndUpdate(
-        { _id: req.body.userId },
-        { $push: { thoughts: dbThoughtData._id } },
-        { new: true }
-      );
-    })
-    .then(dbUserData => {
-      if (!dbUserData) {
+      if (!dbThoughtData) {
         res.status(404).json({ message: "No user found with this id!" });
         return;
       }
-      res.json(dbUserData)
+      // Add thought to user's thoughts array
+      User.findOneAndUpdate(
+        { _id: req.body.userId },
+        { $push: { thoughts: dbThoughtData._id } },
+        { new: true }
+      )
+      .then(dbThoughtData => {
+        res.json(dbThoughtData)
+      })
     })
-    .catch(err => res.status(400).json(err));
+    .catch(err => {
+      console.log("Error posting thought: ", err);
+      res.status(400).json(err)
+    });
 });
 
 // PUT update a thought by ID
