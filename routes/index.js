@@ -234,7 +234,47 @@ router.delete('/api/thoughts/:id', (req, res) => {
 });
 
 
+// POST add reaction to reactions list
+router.post('/api/thoughts/:thoughtId/reactions', (req, res) => {
+  console.log("Got a request to add a reaction to a thought's reactions list");
+  // Create a new Reaction document
+  const reaction = {
+    reactionBody: req.body.reactionBody,
+    username: req.body.username
+  };
+
+  Thought.findOneAndUpdate(
+    { _id: req.params.thoughtId },
+    { $push: { reactions: reaction } },
+    { new: true }
+  )
+  .then(dbThoughtData => {
+    if (!dbThoughtData) {
+      res.status(404).json({ message: "No thought found with this ID!" });
+      return;
+    }
+    res.json(dbThoughtData);
+  })
+  .catch(err => res.status(400).json(err));
+});
 
 
+// DELETE remove reaction from reactions list
+router.delete('/api/thoughts/:thoughtId/reactions/:reactionId', (req, res) => {
+  console.log("Got a request to remove a reaction from a thought's reactions list");
+  Thought.findOneAndUpdate(
+    { _id: req.params.thoughtId },
+    { $pull: { reactions: { _id: req.params.reactionId } } },
+    { new: true }
+  )
+  .then(dbThoughtData => {
+    if (!dbThoughtData) {
+      res.status(404).json({ message: "No thought found with this ID!" });
+      return;
+    }
+    res.json(dbThoughtData);
+  })
+  .catch(err => res.status(400).json(err));
+});
 
 module.exports = router;

@@ -30,34 +30,6 @@ const UserSchema = new Schema({
   ]
 });
 
-const ThoughtSchema = new Schema({
-  thoughtText: {
-    type: String,
-    required: 'Thought is Required',
-    minLength: 1,
-    maxLength: 280
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: (createdAtVal) => dateFormat(createdAtVal)
-  },
-  username: {
-    type: String,
-    required: 'Username is Required'
-  },
-  reactions: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Reaction'
-    }
-  ]
-});
-
-ThoughtSchema.virtual('reactionCount').get(function() {
-  return this.reactions.length;
-});
-
 const ReactionSchema = new Schema({
   reactionId: {
     type: ObjectId,
@@ -77,6 +49,29 @@ const ReactionSchema = new Schema({
     default: Date.now,
     get: (createdAtVal) => dateFormat(createdAtVal)
   }
+});
+
+const ThoughtSchema = new Schema({
+  thoughtText: {
+    type: String,
+    required: 'Thought is Required',
+    minLength: 1,
+    maxLength: 280
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: (createdAtVal) => dateFormat(createdAtVal)
+  },
+  username: {
+    type: String,
+    required: 'Username is Required'
+  },
+  reactions: [ReactionSchema]
+});
+
+ThoughtSchema.virtual('reactionCount').get(function() {
+  return this.reactions.length;
 });
 
 
