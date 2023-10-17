@@ -1,0 +1,25 @@
+{
+  "name": "social-network-api",
+  "version": "1.0.0",
+  "description": "A social network API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "seed": "node seed/index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/alexbishopbootcamp/social-network-api.git"
+  },
+  "author": "Alex Bishop",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexbishopbootcamp/social-network-api/issues"
+  },
+  "homepage": "https://github.com/alexbishopbootcamp/social-network-api#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.6.2"
+  }
+}
