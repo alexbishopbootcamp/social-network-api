@@ -1,14 +1,19 @@
 const { User, Thought } = require('../models');
 
 const newUser = new User({
-  username: 'username',
+  username: 'Alice',
   email: 'email@domain.tld'
 });
 
 const newThought = new Thought({
-  thoughtText: 'Thought',
-  username: 'username'
+  thoughtText: 'I think MongoDB is great!',
+  username: 'Alice'
 });
+
+const newReaction = {
+  reactionBody: 'I agree!',
+  username: 'Bob'
+};
 
 const seed = async () => {
   await User.deleteMany({});
@@ -18,6 +23,10 @@ const seed = async () => {
   await User.updateOne(
     { _id: newUser._id },
     { $push: { thoughts: newThought._id } }
+  );
+  await Thought.updateOne(
+    { _id: newThought._id },
+    { $push: { reactions: newReaction } }
   );
   process.exit(0);
 }
