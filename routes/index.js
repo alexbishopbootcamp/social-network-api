@@ -87,4 +87,43 @@ router.delete('/api/users/:id', (req, res) => {
     .catch(err => res.status(400).json(err));
 });
 
+
+// POST add friend to friends list
+router.post('/api/users/:userId/friends/:friendId', (req, res) => {
+  console.log("Got a request to add a friend to a user's friends list")
+  User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $push: { friends: req.params.friendId } },
+    { new: true }
+  )
+    .then(dbUserData => {
+      if (!dbUserData) {
+        res.status(404).json({ message: "No user found with this ID!" });
+        return;
+      }
+      res.json(dbUserData)
+    })
+    .catch(err => res.status(400).json(err));
+});
+
+// DELETE remove friend from friends list
+router.delete('/api/users/:userId/friends/:friendId', (req, res) => {
+  console.log("Got a request to remove a friend from a user's friends list")
+  User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $pull: { friends: req.params.friendId } },
+    { new: true }
+  )
+    .then(dbUserData => {
+      if (!dbUserData) {
+        res.status(404).json({ message: "No user found with this ID!" });
+        return;
+      }
+      res.json(dbUserData)
+    })
+    .catch(err => res.status(400).json(err));
+});
+
+
+
 module.exports = router;
